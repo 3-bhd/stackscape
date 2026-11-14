@@ -9,6 +9,8 @@ import { useSim } from './ui/useSim';
 import { Challenge } from './views/Challenge';
 import { Compare } from './views/Compare';
 import { Editor } from './views/Editor';
+import { ExampleBar, Examples } from './views/Examples';
+import { SLIDE_EXAMPLES } from './engine/slideExamples';
 import { Lab } from './views/Lab';
 import { Mistakes } from './views/Mistakes';
 import { Multiverse } from './views/Multiverse';
@@ -17,12 +19,15 @@ import { Tour, TOUR_STEPS } from './views/Tour';
 
 const VIEWS: [string, string][] = [
   ['lab', 'Lab'],
+  ['examples', 'Slide examples'],
   ['multiverse', 'Multiverse'],
   ['compare', 'wcwᴿ vs wwᴿ'],
   ['challenge', 'Challenge'],
-  ['mistakes', 'Common mistakes'],
+  ['mistakes', 'Mistakes'],
   ['editor', 'Editor'],
 ];
+
+export interface Jump { key: number; step: number | 'end'; guessAfter?: number; inspector: boolean }
 
 interface Init { view: string; machine: Machine; input: string; mode: AcceptMode; customText: string | null; step: number; present: boolean; intro: boolean | null }
 
@@ -60,6 +65,8 @@ export default function App() {
   const [present, setPresent] = useState(init.present);
   const [story, setStory] = useState(() => init.intro ?? (!load('seenStory', false) && !location.hash.includes('m=')));
   const [tour, setTour] = useState<number | null>(null);
+  const [example, setExample] = useState<number | null>(null);
+  const [jump, setJump] = useState<Jump | null>(null);
   const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(() => load('theme', 'system'));
   useEffect(() => {
     const el = document.documentElement;
@@ -96,12 +103,29 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const openExample = (i: number) => {
+    const ex = SLIDE_EXAMPLES[i];
+    setTour(null);
+    if (ex.machine) {
+      setMachine(ex.machine);
+      setCustomText(ex.machine.id === 'custom' ? serializeMachine(ex.machine) : null);
+      setInput(ex.input ?? '');
+      setMode(ex.mode ?? ex.machine.mode);
+    }
+    setJump({ key: Date.now(), step: ex.step ?? 0, guessAfter: ex.guessAfter, inspector: !!ex.inspector });
+    setExample(i);
+    setView(ex.view);
+    window.scrollTo({ top: 0 });
+  };
+
   const pickPreset = useCallback((p: Preset) => {
+    setExample(null);
     setMachine(p); setCustomText(null); setMode(p.mode); setInput(p.demos[0].input); sfx.click();
   }, []);
   const goto = useCallback((v: string) => { setView(v); window.scrollTo({ top: 0 }); }, []);
 
   const startTour = () => {
+    setExample(null);
     setMachine(ANBN); setCustomText(null); setMode('final'); setInput('aabb'); setView('lab'); setTour(0);
   };
   const closeStory = () => { setStory(false); save('seenStory', true); };
@@ -117,7 +141,7 @@ export default function App() {
             </div>
             <nav className="nav hide-present" aria-label="Views">
               {VIEWS.map(([v, label]) => (
-                <button key={v} aria-current={view === v ? 'page' : undefined} onClick={() => { setTour(null); goto(v); }}>{label}</button>
+                <button key={v} aria-current={view === v ? 'page' : undefined} onClick={() => { setTour(null); if (v === 'examples') setExample(null); goto(v); }}>{label}</button>
               ))}
             </nav>
             {present && <div className="grow mono muted" style={{ fontSize: '0.9rem' }}>{machine.name} · {machine.language}</div>}
@@ -125,19 +149,23 @@ export default function App() {
               <button className="iconbtn hide-present" onClick={startTour} title="Guided tour: aⁿbⁿ on aabb in the slides’ five steps">Tour</button>
               <button className="iconbtn hide-present" onClick={() => setStory(true)} title="Replay the intro story">Intro</button>
               <button className="iconbtn" aria-pressed={present} onClick={() => setPresent((p) => !p)} title="Presentation mode (P)">Present</button>
-              <button className="iconbtn" onClick={nextTheme} title="Colour theme: system, light or dark">{theme === 'system' ? 'Theme: auto' : theme === 'light' ? 'Theme: light' : 'Theme: dark'}</button>
-              <button className="iconbtn" aria-pressed={sound} onClick={() => setSound((s) => !s)} title="Sound effects">{sound ? 'Sound on' : 'Sound off'}</button>
-              <button className="iconbtn hide-present" aria-pressed={reduced} onClick={() => setReduced((r) => !r)} title="Reduce motion">{reduced ? 'Motion: reduced' : 'Motion: on'}</button>
+              <button className="iconbtn" onClick={nextTheme} title="Colour theme: system, light or dark">{theme === 'system' ? 'Auto theme' : theme === 'light' ? 'Light' : 'Dark'}</button>
+              <button className="iconbtn" aria-pressed={sound} onClick={() => setSound((s) => !s)} title="Sound effects (off by default)">Sound</button>
+              <button className="iconbtn hide-present" aria-pressed={reduced} onClick={() => setReduced((r) => !r)} title="Reduce motion">Less motion</button>
             </div>
           </header>
           <main>
+            {example !== null && ['lab', 'multiverse', 'compare', 'mistakes'].includes(view) && (
+              <ExampleBar index={example} open={openExample} close={() => setExample(null)} />
+            )}
+            {view === 'examples' && <Examples open={openExample} />}
             {view === 'lab' && (
               <Lab machine={machine} input={input} mode={mode} sim={sim} setInput={setInput} setMode={setMode} pickPreset={pickPreset} goto={goto}
-                spotlight={tour !== null ? TOUR_STEPS[tour].spot : null} tourActive={tour !== null} initialStep={init.step} />
+                spotlight={tour !== null ? TOUR_STEPS[tour].spot : null} tourActive={tour !== null} initialStep={init.step} jump={jump} />
             )}
             {view === 'multiverse' && (
               <Multiverse machine={machine} input={input} mode={mode} sim={sim} setInput={setInput}
-                pickPreset={(id) => { const p = presetById(id)!; pickPreset(p); if (id === 'wwr') setInput('abba'); }} goto={goto} />
+                pickPreset={(id) => { const p = presetById(id)!; pickPreset(p); if (id === 'wwr') setInput('abba'); }} goto={goto} startAtZero={example !== null} />
             )}
             {view === 'compare' && <Compare />}
             {view === 'challenge' && <Challenge openInLab={(id, w) => { const p = presetById(id)!; pickPreset(p); setInput(w); goto('lab'); }} />}

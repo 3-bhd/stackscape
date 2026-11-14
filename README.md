@@ -13,6 +13,7 @@ An interactive simulator for pushdown automata, built for CSCE 4201 Theory of Co
 | View | What it does |
 | --- | --- |
 | **Lab** | Input tape, state diagram and animated stack tower, all kept in step. Step forward and back, play/pause, change speed, jump to the end (keys `→` `←` `space` `R` `E`). Each step gets a one-line narration, the full ID trace with the δ used on every line (copy it as plain text or LaTeX), a verdict in course terms, a "one operation, three choices of γ" card, the acceptance-mode switch with L(M) and N(M), and a determinism inspector. |
+| **Slide examples** | All 17 worked examples from the Session 20 deck, in slide order. One click loads the machine, string and acceptance mode, stopped at the move the slide discusses, with a bar saying what to point at and Prev / Next to step through them like slides. |
 | **Multiverse** | Nondeterminism as a branching tree you can scrub through. Every branch has its own live mini-stack, stuck branches fade out and the accepting branch lights up. Click a branch to follow it in the Lab. |
 | **wcwᴿ vs wwᴿ** | DFA = NFA, but DPDA ⊊ PDA: both machines side by side, stepped together. Deleting the c turns the switch into a guess. |
 | **Challenge** | (a) predict the next ID, (b) will it accept?, (c) fix the bug in six broken machines. Score and streak are kept in your browser. |

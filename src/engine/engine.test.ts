@@ -245,3 +245,37 @@ describe('reasons are always meaningful', () => {
     expect(v.reason).toContain('∉ F');
   });
 });
+
+import { SLIDE_EXAMPLES } from './slideExamples';
+import { firstEps } from './branchLabel';
+describe('slide examples', () => {
+  it('each example loads, its input is legal, and it gives the expected verdict', () => {
+    for (const e of SLIDE_EXAMPLES) {
+      if (!e.machine) continue;
+      const w = e.input ?? '';
+      for (const ch of w) expect(e.machine.inputAlphabet, e.id).toContain(ch);
+      const r = explore(e.machine, w, e.mode ?? e.machine.mode);
+      expect(r.complete, e.id).toBe(true);
+      expect(r.accepted ? 'accept' : 'reject', e.id).toBe(e.expect);
+      const { machine, errors } = parseMachine(serializeMachine(e.machine));
+      expect(errors, e.id).toEqual([]);
+      expect(machine!.transitions.length).toBe(e.machine.transitions.length);
+      if (e.guessAfter !== undefined) {
+        const leaf = leaves(r).find((n) => n.status !== 'repeat' && firstEps(r, n.id) === e.guessAfter);
+        expect(leaf, e.id).toBeDefined();
+      }
+    }
+  });
+  it('the guess-after-1 branch is stuck exactly as slide 19 says', () => {
+    const r = explore(WWR, 'abba', 'empty');
+    const leaf = leaves(r).find((n) => firstEps(r, n.id) === 1)!;
+    expect(leaf.status).toBe('stuck');
+    expect(fmtID(leaf.config, 'abba').replace(/\s+/g, '')).toBe('(q2,bba,AZ)');
+  });
+  it('the extra ε-move for n = 0 breaks Rule 2 at (q0, Z)', async () => {
+    const { ANBN_WITH_EPS, RULE2_FRAGMENT } = await import('./slideExamples');
+    expect(checkDeterminism(ANBN_WITH_EPS).violations.map((v) => `${v.rule}:${v.state},${v.top}`)).toEqual(['2:q0,Z']);
+    const f = checkDeterminism(RULE2_FRAGMENT);
+    expect([f.rule1, f.rule2]).toEqual([true, false]);
+  });
+});

@@ -10,6 +10,8 @@ import { useSettings } from '../ui/settings';
 import { sfx } from '../ui/sound';
 import { StackTower } from '../ui/StackTower';
 import { Sim } from '../ui/useSim';
+import type { Jump } from '../App';
+import { firstEps } from '../engine/branchLabel';
 
 interface Props {
   machine: Machine;
@@ -23,9 +25,10 @@ interface Props {
   spotlight?: string | null;
   tourActive?: boolean;
   initialStep?: number;
+  jump?: Jump | null;
 }
 
-export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, goto, spotlight, tourActive, initialStep }: Props) {
+export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, goto, spotlight, tourActive, initialStep, jump }: Props) {
   const usedInitial = useRef(false);
   const { present } = useSettings();
   const { run, steps, pb, problem } = sim;
@@ -43,6 +46,24 @@ export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, 
   useEffect(() => {
     if (!usedInitial.current && initialStep) { usedInitial.current = true; const h = setTimeout(() => sim.pb.setIdx(initialStep), 50); return () => clearTimeout(h); }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* slide examples: choose the branch, open the inspector, then stop at the right move */
+  const [pending, setPending] = useState<Jump | null>(null);
+  useEffect(() => {
+    if (!jump) return;
+    setShowInspector(jump.inspector);
+    setPending(jump);
+  }, [jump?.key]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!pending || !run) return;
+    if (pending.guessAfter !== undefined) {
+      const want = leaves(run).find((n) => n.status !== 'repeat' && firstEps(run, n.id) === pending.guessAfter);
+      if (want && want.id !== sim.leafId) { sim.selectLeaf(want.id); return; }
+    }
+    const target = pending.step === 'end' ? steps.length - 1 : pending.step;
+    const h = setTimeout(() => { pb.setPlaying(false); pb.setIdx(target); setPending(null); }, 80);
+    return () => clearTimeout(h);
+  }, [pending, run, steps, sim.leafId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* keyboard shortcuts */
   useEffect(() => {

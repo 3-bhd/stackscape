@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { fmtID, leaves, pathTo, RunNode, RunResult, showSym } from '../engine/pda';
 import { PRESETS } from '../engine/presets';
+import { branchLabel, firstEps } from '../engine/branchLabel';
 import { AcceptMode, Machine } from '../engine/types';
 import { IDText, VerdictBox } from '../ui/Panels';
 import { StackTower } from '../ui/StackTower';
@@ -13,20 +14,6 @@ const ROWH = 46;
 const statusColor = (s: RunNode['status']) =>
   s === 'accept' ? 'var(--accept)' : s === 'stuck' ? 'var(--reject)' : s === 'repeat' ? 'var(--dim)' : s === 'cut' ? 'var(--amber)' : 'var(--cyan)';
 
-export function firstEps(run: RunResult, leafId: number): number {
-  for (const id of pathTo(run, leafId)) {
-    const n = run.nodes[id];
-    if (n.via?.read === '' && n.parent !== null) return run.nodes[n.parent].config.pos;
-  }
-  return Infinity;
-}
-
-export function branchLabel(run: RunResult, leafId: number): string {
-  const k = firstEps(run, leafId);
-  if (k === Infinity) return 'no ε-move';
-  return `${run.machine.id === 'wwr' ? 'guess' : 'first ε-move'} after ${k} symbol${k === 1 ? '' : 's'}`;
-}
-
 interface Props {
   machine: Machine;
   input: string;
@@ -35,9 +22,10 @@ interface Props {
   setInput: (s: string) => void;
   pickPreset: (id: string) => void;
   goto: (v: string) => void;
+  startAtZero?: boolean;
 }
 
-export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: Props) {
+export function Multiverse({ machine, input, sim, setInput, pickPreset, goto, startAtZero }: Props) {
   const run = sim.run;
   const [t, setT] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -64,7 +52,7 @@ export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: 
     return { y, lanes: lane, maxDepth, nodes: shownNodes, truncated: run.nodes.length > shownNodes.length };
   }, [run]);
 
-  useEffect(() => { setT(layout?.maxDepth ?? 0); setPlaying(false); }, [layout]);
+  useEffect(() => { setT(startAtZero ? 0 : layout?.maxDepth ?? 0); setPlaying(false); }, [layout]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!playing || !layout) return;
     if (t >= layout.maxDepth) { setPlaying(false); return; }
