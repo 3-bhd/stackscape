@@ -90,7 +90,7 @@ export function stuckReason(m: Machine, c: Config, input: string, mode: AcceptMo
   if (c.stack.length === 0) {
     return rest.length
       ? `stuck: the stack is empty, so no move is possible — and ${rest} is still unread`
-      : `stack empty but … (unreachable)`;
+      : `input consumed but ${c.state} ∉ F (and with the stack empty no further move is possible)`;
   }
   const top = c.stack[0];
   if (rest.length) {

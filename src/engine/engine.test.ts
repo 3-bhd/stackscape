@@ -236,3 +236,12 @@ describe('fix-the-bug machines really show their symptoms', () => {
     }
   });
 });
+
+describe('reasons are always meaningful', () => {
+  it('final-state judgement of an empty-stack machine explains the emptied stack', () => {
+    const v = verdict(explore(WWR, 'abba', 'final'));
+    expect(v.accepted).toBe(false);
+    expect(v.reason).not.toContain('unreachable');
+    expect(v.reason).toContain('∉ F');
+  });
+});
