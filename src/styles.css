@@ -412,3 +412,18 @@ textarea, .mono, .formula, .trace, .code, .delta-list { font-variant-ligatures: 
   .judge { grid-template-columns: 1fr; }
   .wrongright { grid-template-columns: 1fr; }
 }
+
+/* ---------- 4K presentation + phone layout ---------- */
+.present main { max-width: none; }
+.present .cell { width: 3.2rem; height: 3.2rem; font-size: 1.7rem; }
+.present .cell.end { font-size: 0.7rem; }
+.present .block { width: 7.5rem; height: 2.5rem; font-size: 1.4rem; }
+.present .block.bottom { width: 9rem; }
+.present .toplabel { right: -4.2rem; font-size: 0.7rem; }
+.present .lab-grid { grid-template-columns: minmax(0, 1.25fr) minmax(14rem, 18rem) minmax(0, 1fr); }
+@media (max-width: 640px) {
+  .lab-grid, .present .lab-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'tape' 'ctrl' 'stack' 'play' 'trace'; }
+  .area-stack { min-height: 220px; }
+  .toplabel { right: -56px; left: auto; top: 50%; transform: translateY(-50%); }
+  .tower { padding-top: 0; }
+}
