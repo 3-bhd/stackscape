@@ -45,7 +45,7 @@ export function Tape({ input, pos, epsMove }: { input: string; pos: number; epsM
 
 function HeadMarker({ eps }: { eps: boolean }) {
   return (
-    <motion.div className="head" layoutId="tapehead" animate={eps ? { y: [0, -4, 0] } : {}} transition={{ duration: 0.4 }}>
+    <motion.div className="head" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: eps ? [0, -4, 0] : 0 }} transition={{ duration: 0.3 }}>
       ▲<br />HEAD
     </motion.div>
   );
