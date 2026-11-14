@@ -58,7 +58,7 @@ export function Compare() {
         <b>Step both machines together:</b>
         <button className="btn small" onClick={() => { setPlaying(false); setT(0); }} aria-label="Reset both">⟲</button>
         <button className="btn small" onClick={() => { setPlaying(false); setT(Math.max(0, t - 1)); }} aria-label="Back">◀</button>
-        <button className="btn small primary" onClick={() => { if (t >= maxT) setT(0); setPlaying((p) => !p); }}>{playing ? '❚❚' : '▶ play both'}</button>
+        <button className="btn small primary" onClick={() => { if (t >= maxT) setT(0); setPlaying((p) => !p); }}>{playing ? 'Pause' : 'Play both'}</button>
         <button className="btn small" onClick={() => { setPlaying(false); setT(Math.min(maxT, t + 1)); }} aria-label="Forward">▶</button>
         <button className="btn small" onClick={() => { setPlaying(false); setT(maxT); }} aria-label="End">⏭</button>
         <span className="mono muted">move {t}</span>

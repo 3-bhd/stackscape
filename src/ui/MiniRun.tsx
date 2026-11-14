@@ -52,7 +52,7 @@ export function MiniRun({ machine, input, mode = machine.mode, diagram, bad, mar
         <div className="row" style={{ marginTop: 8 }}>
           <button className="btn small" onClick={pb.reset} aria-label="Reset">⟲</button>
           <button className="btn small" onClick={pb.back} disabled={pb.idx === 0} aria-label="Back">◀</button>
-          <button className="btn small primary" onClick={pb.toggle}>{pb.playing ? '❚❚' : '▶'}</button>
+          <button className="btn small primary" onClick={pb.toggle}>{pb.playing ? 'Pause' : 'Play'}</button>
           <button className="btn small" onClick={() => { pb.setPlaying(false); pb.forward(); }} disabled={atEnd} aria-label="Forward">▶</button>
           <button className="btn small" onClick={pb.end} aria-label="End">⏭</button>
           <span className="muted mono" style={{ fontSize: '0.8rem' }}>{idx}/{steps.length - 1}{branches > 1 ? ` · ${branches} branches` : ''}</span>

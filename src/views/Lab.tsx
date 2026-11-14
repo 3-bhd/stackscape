@@ -86,7 +86,7 @@ export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, 
               {p.short} <span className={`tag ${p.deterministic ? 'det' : 'nd'}`} style={{ marginLeft: 4 }}>{p.deterministic ? 'DPDA' : 'NPDA'}</span>
             </button>
           ))}
-          {machine.id === 'custom' && <button className="chip" aria-pressed>✎ {machine.name}</button>}
+          {machine.id === 'custom' && <button className="chip" aria-pressed>{machine.name}</button>}
         </div>
         <div className="row" style={{ justifyContent: 'flex-end' }}>
           <span className="muted hide-present" style={{ fontSize: '0.8rem' }}>accept by</span>
@@ -134,7 +134,7 @@ export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, 
         </section>
 
         <section className={`panel area-stack ${sp('stack')}`} aria-label="Stack" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="panel-title"><b>Stack</b><span>top at the TOP</span></div>
+          <div className="panel-title"><b>Stack</b><span>drawn with the top at the top</span></div>
           <div style={{ flex: 1 }}>
             <StackTower stack={cur.config.stack} bottom={machine.bottom} />
           </div>
@@ -150,7 +150,7 @@ export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, 
             <button className="btn" onClick={pb.reset} title="Reset (R)" aria-label="Reset">⟲</button>
             <button className="btn" onClick={pb.back} disabled={pb.idx === 0} title="Step back (←)" aria-label="Step back">◀</button>
             <button className="btn primary" onClick={pb.toggle} title="Play / pause (space)" aria-label={pb.playing ? 'Pause' : 'Play'} style={{ minWidth: 70 }}>
-              {pb.playing ? '❚❚' : '▶ play'}
+              {pb.playing ? 'Pause' : 'Play'}
             </button>
             <button className="btn" onClick={() => { pb.setPlaying(false); pb.forward(); }} disabled={pb.atEnd} title="Step forward (→)" aria-label="Step forward">▶</button>
             <button className="btn" onClick={pb.end} title="Jump to end (E / End)" aria-label="Jump to end">⏭</button>
@@ -168,7 +168,7 @@ export function Lab({ machine, input, mode, sim, setInput, setMode, pickPreset, 
                 <span className="muted" style={{ fontSize: '0.8rem' }}>branch {branchIdx + 1}/{ls.length}</span>
                 <button className="btn small" onClick={() => sim.selectLeaf(ls[(branchIdx - 1 + ls.length) % ls.length].id)} aria-label="Previous branch">‹</button>
                 <button className="btn small" onClick={() => sim.selectLeaf(ls[(branchIdx + 1) % ls.length].id)} aria-label="Next branch">›</button>
-                <button className="btn small pink" onClick={() => goto('multiverse')}>Multiverse ⑂</button>
+                <button className="btn small pink" onClick={() => goto('multiverse')}>Show all branches</button>
               </div>
             )}
           </div>

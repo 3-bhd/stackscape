@@ -62,8 +62,8 @@ export function Tour({ step, setStep, pb, onClose }: { step: number; setStep: (n
   return (
     <aside className="tour" role="dialog" aria-label="Guided tour of aⁿbⁿ on aabb">
       <div className="tour-steps">{TOUR_STEPS.map((_, i) => <span key={i} className={i <= step ? 'on' : ''} />)}</div>
-      <div className="muted" style={{ fontSize: '0.75rem', marginTop: 8, letterSpacing: '0.12em' }}>GUIDED TOUR · aⁿbⁿ ON aabb · SLIDES 8–12</div>
-      <h3>{s.title}</h3>
+      <div className="eyebrow">Guided tour · aⁿbⁿ on aabb · slides 8–12 · step {step + 1} of {TOUR_STEPS.length}</div>
+      <h3>{s.title.replace(/^\d · /, '')}</h3>
       {s.body.map((b, i) => <p key={i}>{b}</p>)}
       <div className="row" style={{ marginTop: 10 }}>
         <button className="btn small" onClick={onClose}>End tour</button>

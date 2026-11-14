@@ -90,7 +90,7 @@ export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: 
     <div>
       <div className="view-head">
         <div>
-          <h1>Multiverse ⑂ <span className="muted" style={{ fontSize: '1rem' }}>— nondeterminism, all branches at once</span></h1>
+          <h1>Multiverse <span className="muted" style={{ fontSize: '1rem' }}>— every branch of a nondeterministic run</span></h1>
           <p>When the machine has a choice, the run splits. Every branch is a full computation with its own stack. The string is accepted if <b>SOME</b> branch accepts; it is rejected only when <b>every</b> branch is stuck.</p>
         </div>
         <form className="row" onSubmit={(e) => { e.preventDefault(); setInput(draft.replace(/\s+/g, '')); }}>
@@ -124,7 +124,7 @@ export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: 
               return (
                 <g key={'e' + n.id} opacity={vis ? 1 : 0.12}>
                   <path className="e" d={`M ${x1} ${y1} C ${x1 + COLW / 2} ${y1} ${x2 - COLW / 2} ${y2} ${x2} ${y2}`}
-                    stroke={onPath ? 'var(--cyan)' : 'rgba(160,170,255,0.4)'} strokeWidth={onPath ? 3 : 1.6} />
+                    stroke={onPath ? 'var(--accent)' : 'var(--line-strong)'} strokeWidth={onPath ? 2.5 : 1.4} />
                   <text className="elbl" x={(x1 + x2) / 2} y={(y1 + y2) / 2 - 5}>{n.via?.read === '' ? 'ε' : n.via?.read}</text>
                 </g>
               );
@@ -136,8 +136,8 @@ export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: 
               return (
                 <motion.g key={n.id} className="n" initial={false} animate={{ opacity: vis ? (leafDone && n.status !== 'accept' ? 0.55 : 1) : 0.1 }}
                   onClick={n.children.length === 0 && n.status !== 'repeat' ? () => open(n.id) : undefined} style={{ cursor: n.children.length === 0 ? 'pointer' : 'default' }}>
-                  <circle cx={n.depth * COLW} cy={layout.y.get(n.id)} r={14} fill="#0b0b1d" stroke={col}
-                    style={leafDone && n.status === 'accept' ? { filter: 'drop-shadow(0 0 8px var(--accept))' } : undefined} />
+                  <circle cx={n.depth * COLW} cy={layout.y.get(n.id)} r={14} fill={leafDone && n.status === 'accept' ? 'var(--ok-soft)' : 'var(--surface)'} stroke={col}
+                    strokeWidth={leafDone && n.status === 'accept' ? 3 : 1.6} />
                   <text x={n.depth * COLW} y={layout.y.get(n.id)}>{n.config.state}</text>
                   {leafDone && (
                     <text x={n.depth * COLW + 24} y={layout.y.get(n.id)} style={{ fill: col, fontSize: 12, textAnchor: 'start' }}>
@@ -153,7 +153,7 @@ export function Multiverse({ machine, input, sim, setInput, pickPreset, goto }: 
         <div className="row" style={{ marginTop: 8 }}>
           <button className="btn small" onClick={() => setT(0)}>⟲</button>
           <button className="btn small" onClick={() => setT((x) => Math.max(0, x - 1))}>◀</button>
-          <button className="btn small primary" onClick={() => { if (t >= layout.maxDepth) setT(0); setPlaying((p) => !p); }}>{playing ? '❚❚' : '▶ play time'}</button>
+          <button className="btn small primary" onClick={() => { if (t >= layout.maxDepth) setT(0); setPlaying((p) => !p); }}>{playing ? 'Pause' : 'Play'}</button>
           <button className="btn small" onClick={() => setT((x) => Math.min(layout.maxDepth, x + 1))}>▶</button>
           <input type="range" min={0} max={layout.maxDepth} value={t} onChange={(e) => { setPlaying(false); setT(+e.target.value); }} className="grow" aria-label="Scrub through time" />
           <span className="mono muted">t = {t} move{t === 1 ? '' : 's'}</span>

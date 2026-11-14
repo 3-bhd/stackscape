@@ -44,7 +44,7 @@ export function Editor({ current, onUse }: { current: Machine; onUse: (m: Machin
     <div>
       <div className="view-head">
         <div>
-          <h1>Machine editor ✎</h1>
+          <h1>Machine editor</h1>
           <p>Define Q, Σ, Γ, q₀, Z₀, F and δ in plain text. Each transition is one line: <span className="mono">q0, a, Z -&gt; q0, XZ</span>. Use <span className="mono">eps</span> (or ε) for the empty string, <span className="mono">|</span> for several targets, or write <span className="mono">δ(q0, a, Z) = (q0, XZ)</span>.</p>
         </div>
         <div className="row">
@@ -58,7 +58,7 @@ export function Editor({ current, onUse }: { current: Machine; onUse: (m: Machin
           <label className="panel-title" htmlFor="ed"><b>Definition</b><span>{text.split('\n').length} lines</span></label>
           <textarea id="ed" value={text} onChange={(e) => setText(e.target.value)} spellCheck={false} />
           <div className="row" style={{ marginTop: 8 }}>
-            <button className="btn primary" disabled={!res.machine} onClick={() => res.machine && onUse(res.machine, text)}>Run it in the Lab ▶</button>
+            <button className="btn primary" disabled={!res.machine} onClick={() => res.machine && onUse(res.machine, text)}>Run it in the Lab</button>
             <button className="btn" disabled={!res.machine} onClick={share}>{copied ? '✓ link copied' : 'Copy share link'}</button>
           </div>
         </section>

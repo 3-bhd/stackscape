@@ -126,10 +126,10 @@ export function Diagram({ machine: m, active, fired, bad, marked, onPickTransiti
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
         <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="rgba(160,170,255,0.75)" />
+          <path d="M0,0 L10,5 L0,10 z" className="arrowhead" />
         </marker>
         <marker id="arr-hot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="#ff4fd8" />
+          <path d="M0,0 L10,5 L0,10 z" className="arrowhead hot" />
         </marker>
       </defs>
       {sp && (

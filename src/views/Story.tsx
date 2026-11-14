@@ -60,8 +60,8 @@ export function Story({ onDone }: { onDone: () => void }) {
       <AnimatePresence mode="wait">
         {scene === 0 && (
           <motion.div key="s0" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-            <p className="mono" style={{ color: 'var(--cyan)' }}>Session 13 proved it. Session 17 described it.</p>
-            <h2 className="mono" style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)' }}>{'{'} aⁿbⁿ {'}'}</h2>
+            <p className="kicker">Session 13 proved it impossible for a finite automaton. Session 17 gave it a grammar.</p>
+            <div className="big-lang">{'{'} aⁿbⁿ {'}'}</div>
             <p>Can a finite automaton accept it? Let’s give one a try.</p>
           </motion.div>
         )}
@@ -93,8 +93,8 @@ export function Story({ onDone }: { onDone: () => void }) {
           <motion.div key="s2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <h2>One thing is added.</h2>
             <motion.div initial={{ y: -400, rotate: -8 }} animate={{ y: 0, rotate: 0 }} transition={{ type: 'spring', stiffness: 120, damping: 12, delay: 0.3 }}
-              style={{ margin: '30px auto', width: 160, height: 190, border: '3px solid var(--cyan)', borderTop: 'none', borderRadius: '0 0 16px 16px', boxShadow: '0 0 40px rgba(60,242,255,0.4)', display: 'grid', placeItems: 'end center', paddingBottom: 10 }}>
-              <span className="mono" style={{ color: 'var(--cyan)', letterSpacing: '0.2em' }}>STACK</span>
+              className="story-stack">
+              <span className="mono muted">stack</span>
             </motion.div>
             <p>A memory with no size limit — but you may only look at the top.</p>
           </motion.div>
@@ -109,14 +109,14 @@ export function Story({ onDone }: { onDone: () => void }) {
               <div style={{ width: 220 }}><StackTower stack={cfg.stack} bottom="Z" bare /></div>
             </div>
             <p className="mono">( {cfg.state} , {'aaabbb'.slice(cfg.pos) || 'ε'} , {cfg.stack} )</p>
-            {k >= run.length - 1 ? <p style={{ color: 'var(--accept)', fontWeight: 800, fontSize: '1.6rem' }}>ACCEPT ✓ — one X per a, popped by each b</p> : <p>push an X per a… pop one per b…</p>}
+            {k >= run.length - 1 ? <p style={{ color: 'var(--ok)', fontWeight: 600, fontSize: '1.4rem' }}>Accepted — one X per a, popped by each b.</p> : <p>push an X per a… pop one per b…</p>}
           </motion.div>
         )}
         {scene === 4 && (
           <motion.div key="s4" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
             <div className="tagline"><span className="u">Unbounded in size,</span><br /><span className="r">severely restricted in access.</span></div>
             <p style={{ marginTop: 16 }}>That combination is the whole design of a pushdown automaton.</p>
-            <button className="btn primary" style={{ marginTop: 20, fontSize: '1.1rem', padding: '12px 26px' }} onClick={onDone} autoFocus>Enter the lab →</button>
+            <button className="btn primary" style={{ marginTop: 20, fontSize: '1.1rem', padding: '12px 26px' }} onClick={onDone} autoFocus>Enter the lab</button>
           </motion.div>
         )}
       </AnimatePresence>

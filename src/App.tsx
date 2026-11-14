@@ -17,11 +17,11 @@ import { Tour, TOUR_STEPS } from './views/Tour';
 
 const VIEWS: [string, string][] = [
   ['lab', 'Lab'],
-  ['multiverse', 'Multiverse ⑂'],
+  ['multiverse', 'Multiverse'],
   ['compare', 'wcwᴿ vs wwᴿ'],
-  ['challenge', 'Challenge 🎮'],
+  ['challenge', 'Challenge'],
   ['mistakes', 'Common mistakes'],
-  ['editor', 'Editor ✎'],
+  ['editor', 'Editor'],
 ];
 
 interface Init { view: string; machine: Machine; input: string; mode: AcceptMode; customText: string | null; step: number; present: boolean; intro: boolean | null }
@@ -60,6 +60,13 @@ export default function App() {
   const [present, setPresent] = useState(init.present);
   const [story, setStory] = useState(() => init.intro ?? (!load('seenStory', false) && !location.hash.includes('m=')));
   const [tour, setTour] = useState<number | null>(null);
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(() => load('theme', 'system'));
+  useEffect(() => {
+    const el = document.documentElement;
+    if (theme === 'system') delete el.dataset.theme; else el.dataset.theme = theme;
+    save('theme', theme);
+  }, [theme]);
+  const nextTheme = () => setTheme((t) => (t === 'system' ? 'light' : t === 'light' ? 'dark' : 'system'));
 
   const sim = useSim(machine, input, mode);
 
@@ -106,7 +113,7 @@ export default function App() {
           <header className="topbar">
             <div className="logo" aria-label="Stackscape">
               <span className="glyph" aria-hidden><i /><i /><i /></span>
-              <span>STACK<b>SCAPE</b></span>
+              <span>Stackscape</span>
             </div>
             <nav className="nav hide-present" aria-label="Views">
               {VIEWS.map(([v, label]) => (
@@ -115,11 +122,12 @@ export default function App() {
             </nav>
             {present && <div className="grow mono muted" style={{ fontSize: '0.9rem' }}>{machine.name} · {machine.language}</div>}
             <div className="tools">
-              <button className="iconbtn hide-present" onClick={startTour} title="Guided tour: aⁿbⁿ on aabb in the slides’ five steps">▶ Tour</button>
+              <button className="iconbtn hide-present" onClick={startTour} title="Guided tour: aⁿbⁿ on aabb in the slides’ five steps">Tour</button>
               <button className="iconbtn hide-present" onClick={() => setStory(true)} title="Replay the intro story">Intro</button>
-              <button className="iconbtn" aria-pressed={present} onClick={() => setPresent((p) => !p)} title="Presentation mode (P)">⛶ Present</button>
-              <button className="iconbtn" aria-pressed={sound} onClick={() => setSound((s) => !s)} title="Sound effects">{sound ? '🔊' : '🔇'}<span className="sr-only">sound</span></button>
-              <button className="iconbtn hide-present" aria-pressed={reduced} onClick={() => setReduced((r) => !r)} title="Reduce motion">{reduced ? 'motion: low' : 'motion: on'}</button>
+              <button className="iconbtn" aria-pressed={present} onClick={() => setPresent((p) => !p)} title="Presentation mode (P)">Present</button>
+              <button className="iconbtn" onClick={nextTheme} title="Colour theme: system, light or dark">{theme === 'system' ? 'Theme: auto' : theme === 'light' ? 'Theme: light' : 'Theme: dark'}</button>
+              <button className="iconbtn" aria-pressed={sound} onClick={() => setSound((s) => !s)} title="Sound effects">{sound ? 'Sound on' : 'Sound off'}</button>
+              <button className="iconbtn hide-present" aria-pressed={reduced} onClick={() => setReduced((r) => !r)} title="Reduce motion">{reduced ? 'Motion: reduced' : 'Motion: on'}</button>
             </div>
           </header>
           <main>
@@ -139,7 +147,7 @@ export default function App() {
             )}
           </main>
           <footer className="footer hide-present">
-            STACKSCAPE · a pushdown automaton simulator for CSCE 4201 Theory of Computing (Session 20) · conventions: M = (Q, Σ, Γ, δ, q₀, Z₀, F), IDs (q, w, α) with the stack written top first
+            Stackscape · a pushdown automaton simulator for CSCE 4201 Theory of Computing (Session 20) · conventions: M = (Q, Σ, Γ, δ, q₀, Z₀, F), IDs (q, w, α) with the stack written top first
           </footer>
           {tour !== null && view === 'lab' && <Tour step={tour} setStep={setTour} pb={sim.pb} onClose={() => setTour(null)} />}
           {story && <Story onDone={closeStory} />}

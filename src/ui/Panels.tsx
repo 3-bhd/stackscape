@@ -33,7 +33,7 @@ export function Tape({ input, pos, epsMove }: { input: string; pos: number; epsM
           <AnimatePresence>
             {epsMove && (
               <motion.span className="eps-flash" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
-                ε-move: the head did NOT move
+                ε-move: the head does not move
               </motion.span>
             )}
           </AnimatePresence>
@@ -45,8 +45,8 @@ export function Tape({ input, pos, epsMove }: { input: string; pos: number; epsM
 
 function HeadMarker({ eps }: { eps: boolean }) {
   return (
-    <motion.div className="head" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: eps ? [0, -4, 0] : 0 }} transition={{ duration: 0.3 }}>
-      ▲<br />HEAD
+    <motion.div className="head" animate={{ y: eps ? [0, -4, 0] : 0 }} transition={{ duration: 0.3 }}>
+      ▲<br />head
     </motion.div>
   );
 }
@@ -91,7 +91,7 @@ export function Trace({ steps, idx, input, onJump, footer }: { steps: Step[]; id
           <button className="btn small" onClick={() => copy('latex')} title="Copy the whole trace as LaTeX (align*)">{copied === 'latex' ? '✓ copied' : 'LaTeX'}</button>
         </span>
       </div>
-      <div className="trace-hint">( state , UNREAD input , stack ) — stack written <b>top first</b>: the <span className="topsym">underlined</span> symbol is the top</div>
+      <div className="trace-hint">( state, <b>unread</b> input, stack ) — the stack is written <b>top first</b>; the <span className="topsym">underlined</span> symbol is the top.</div>
       <div className="trace" role="list">
         {shown.map((st, i) => (
           <button

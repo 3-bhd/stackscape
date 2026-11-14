@@ -40,13 +40,13 @@ export function Challenge({ openInLab }: { openInLab: (machineId: string, input:
     <div>
       <div className="view-head">
         <div>
-          <h1>Challenge mode 🎮</h1>
+          <h1>Challenge mode</h1>
           <p>Three games. Streaks multiply your points. Your score is kept in this browser.</p>
         </div>
         <div className="row">
           <div className="score" aria-live="polite">
             <span>score <b>{s.score}</b></span>
-            <span className="streak">streak <b>{s.streak}🔥</b></span>
+            <span className="streak">streak <b>{s.streak}</b></span>
             <span>best <b>{s.best}</b></span>
           </div>
           <button className="btn small" onClick={reset}>reset</button>
@@ -199,8 +199,8 @@ function WillAccept({ hit, openInLab }: { hit: (ok: boolean) => void; openInLab:
       <div className="formula" style={{ fontSize: '0.78rem', columns: 2 }}>{r.p.transitions.map((t) => <div key={t.id}>{fmtDelta(t)}</div>)}</div>
       <div className="bigq" style={{ fontSize: '2.2rem', letterSpacing: '0.2em' }}>{showSym(r.w)}</div>
       <div className="row" style={{ justifyContent: 'center' }}>
-        <button className="btn primary" style={{ background: 'var(--accept)', borderColor: 'var(--accept)', minWidth: 140 }} onClick={() => answer(true)} disabled={guess !== null}>ACCEPT</button>
-        <button className="btn primary" style={{ background: 'var(--reject)', borderColor: 'var(--reject)', minWidth: 140 }} onClick={() => answer(false)} disabled={guess !== null}>REJECT</button>
+        <button className="btn yes" onClick={() => answer(true)} disabled={guess !== null}>Accept</button>
+        <button className="btn no" onClick={() => answer(false)} disabled={guess !== null}>Reject</button>
       </div>
       {guess !== null && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`feedback ${guess === r.v.accepted ? 'good' : 'bad'}`}>

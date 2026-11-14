@@ -4,9 +4,9 @@ import { showSym } from '../engine/pda';
 import { useSettings } from './settings';
 
 const FIXED: Record<string, string> = {
-  X: '#3cf2ff', A: '#ff4fd8', B: '#b8ff4a', P: '#b8ff4a', N: '#ff7a59', Y: '#9b7bff', W: '#ffd84a',
+  X: 'var(--sym-1)', A: 'var(--sym-1)', B: 'var(--sym-2)', P: 'var(--sym-3)', N: 'var(--sym-2)', Y: 'var(--sym-4)', W: 'var(--sym-5)',
 };
-const PALETTE = ['#3cf2ff', '#ff4fd8', '#b8ff4a', '#9b7bff', '#ff7a59', '#5cffc8', '#ffd84a'];
+const PALETTE = ['var(--sym-1)', 'var(--sym-2)', 'var(--sym-3)', 'var(--sym-4)', 'var(--sym-5)', 'var(--sym-6)'];
 export function colorFor(sym: string): string {
   if (FIXED[sym]) return FIXED[sym];
   let h = 0;
@@ -71,15 +71,15 @@ export function StackTower({ stack, bottom, mini, bare, maxVisible }: Props) {
                   key={key}
                   layout={!reducedMotion}
                   className={`block ${isBottom ? 'bottom' : ''}`}
-                  style={isBottom ? undefined : ({ background: c, ['--glow' as any]: c + '88' } as React.CSSProperties)}
+                  style={isBottom ? undefined : { background: c }}
                   initial={reducedMotion ? false : wasThere ? { rotateY: 90, opacity: 0.2 } : { y: mini ? -40 : -160, opacity: 0, scale: 0.9 }}
                   animate={{ y: 0, x: 0, opacity: 1, scale: 1, rotateY: 0, rotate: 0 }}
                   exit={reducedMotion ? { opacity: 0, transition: { duration: 0 } } : { x: mini ? 40 : 150, y: mini ? -30 : -120, rotate: 28, opacity: 0, transition: { duration: 0.38 } }}
                   transition={spring}
                 >
-                  {isBottom && <span className="anchor" aria-hidden>⚓</span>}
+                  {isBottom && <span className="anchor" aria-hidden>bottom</span>}
                   {b.sym}
-                  {b.isTop && <span className="toplabel">◂ TOP</span>}
+                  {b.isTop && <span className="toplabel">← top</span>}
                 </motion.div>
               );
             })}
@@ -91,7 +91,7 @@ export function StackTower({ stack, bottom, mini, bare, maxVisible }: Props) {
         <div className="stack-foot">
           <span>
             in the ID: <span className="written">{n ? <><span className="topsym">{stack[0]}</span>{stack.slice(1)}</> : 'ε'}</span>{' '}
-            <span className="warn">← top is LEFTMOST</span>
+            <span className="muted">(top is leftmost)</span>
           </span>
           <span className="height-badge" title="stack height">h = {n}</span>
         </div>
@@ -111,7 +111,7 @@ function Burst({ kind, color }: { kind: 'push' | 'pop' | 'swap'; color: string }
           <motion.span
             key={i}
             className="particle"
-            style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+            style={{ background: color }}
             initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
             animate={{ x: Math.cos(ang) * dist, y: Math.sin(ang) * dist * (kind === 'pop' ? 0.9 : 0.5) - (kind === 'pop' ? 20 : 0), opacity: 0, scale: 0.3 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}

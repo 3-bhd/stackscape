@@ -13,12 +13,14 @@ An interactive simulator for pushdown automata, built for CSCE 4201 Theory of Co
 | View | What it does |
 | --- | --- |
 | **Lab** | Input tape, state diagram and animated stack tower, all kept in step. Step forward and back, play/pause, change speed, jump to the end (keys `→` `←` `space` `R` `E`). Each step gets a one-line narration, the full ID trace with the δ used on every line (copy it as plain text or LaTeX), a verdict in course terms, a "one operation, three choices of γ" card, the acceptance-mode switch with L(M) and N(M), and a determinism inspector. |
-| **Multiverse ⑂** | Nondeterminism as a branching tree you can scrub through. Every branch has its own live mini-stack, stuck branches fade out and the accepting branch lights up. Click a branch to follow it in the Lab. |
+| **Multiverse** | Nondeterminism as a branching tree you can scrub through. Every branch has its own live mini-stack, stuck branches fade out and the accepting branch lights up. Click a branch to follow it in the Lab. |
 | **wcwᴿ vs wwᴿ** | DFA = NFA, but DPDA ⊊ PDA: both machines side by side, stepped together. Deleting the c turns the switch into a guess. |
-| **Challenge 🎮** | (a) predict the next ID, (b) will it accept?, (c) fix the bug in six broken machines. Score and streak are kept in your browser. |
+| **Challenge** | (a) predict the next ID, (b) will it accept?, (c) fix the bug in six broken machines. Score and streak are kept in your browser. |
 | **Common mistakes** | The three mistakes from slide 16, each with a live demo of the wrong and the right version. |
-| **Editor ✎** | Write your own machine in plain text, get friendly validation and a determinism check, and share it as a link. |
-| **Tour / Present** | `▶ Tour` walks through aⁿbⁿ on aabb in the slides' five steps. `P` toggles a big-font, high-contrast presentation layout. |
+| **Editor** | Write your own machine in plain text, get friendly validation and a determinism check, and share it as a link. |
+| **Tour / Present** | **Tour** walks through aⁿbⁿ on aabb in the slides' five steps. `P` toggles a big-font, high-contrast presentation layout. |
+
+A **Theme** button switches between auto (follows your system), light and dark.
 
 The first visit opens a 25-second intro (skippable, and you can replay it with **Intro**). Sound effects are off by default. Motion follows your OS reduced-motion setting and can also be turned down from the toolbar.
 
@@ -54,7 +56,7 @@ Example: `https://3-bhd.github.io/stackscape/#view=multiverse&p=wwr&w=abba&mode=
 
 ## Adding a machine
 
-**From the app.** Open **Editor ✎**, write the machine, then click **Run it in the Lab** or **Copy share link**. The format:
+**From the app.** Open **Editor**, write the machine, then click **Run it in the Lab** or **Copy share link**. The format:
 
 ```
 name: aⁿbⁿ
